@@ -1,15 +1,25 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3.0 + Vite" />
+<Demo :title="title"></Demo>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, onMounted } from 'vue'
+import Demo from './components/Demo.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Demo
+  },
+  data(){
+    return {
+      title: '前端好学么？'
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.title = 'Hello World'
+    } ,2000)
   }
 }
 </script>
