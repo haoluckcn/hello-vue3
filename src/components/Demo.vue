@@ -6,11 +6,12 @@
     <p>支持率:{{ratio}}</p>
     <button @click="change(0)">支持</button>
     <button @click="change(1)">反对</button>
+    <div ref="root">模版</div>
   </div>
 </template>
 
 <script>
-import { ref, reactive, toRefs, readonly, computed, watchEffect } from 'vue'
+import { ref, reactive, toRefs, readonly, computed, watchEffect, watch, onMounted, onBeforeMount, onBeforeUnmount, onBeforeUpdate, onUpdated, onUnmounted, onErrorCaptured } from 'vue'
 
 export default {
   name: 'Vote',
@@ -76,11 +77,49 @@ export default {
         console.log(val,'set')
       }
     })
-    ratio.value = 123
+    // ratio.value = 123
+
+
+    // 立即执行传入的一个函数，并响应式追踪其依赖，并在其依赖变更时重新运行该函数。
+    watchEffect(() => {
+      // console.log('watchEffect:', original.supNum)
+    })
+
+    // watch API 完全等效于 2.x this.$watch （以及 watch 中相应的选项）。watch 需要侦听特定的数据源，并在回调函数中执行副作用。默认情况是懒执行的，也就是说仅在侦听的源变更时才执行回调。
+    watch(() => original.supNum, (supNum,prevSupNum) => {
+      // console.log('watch:', supNum, prevSupNum)
+    })
+
+    // 模板 Refs 当使用组合式 API 时，reactive refs 和 template refs 的概念已经是统一的。为了获得对模板内元素或组件实例的引用，我们可以像往常一样在 setup() 中声明一个 ref 并返回它：
+    const root = ref(null)
+    onBeforeMount(() => {
+      console.log('onBeforeMount')
+    })
+    onMounted(() => {
+      // 在渲染完成后, 这个 div DOM 会被赋值给 root ref 对象
+      console.log('onMounted', root.value) // <div/>
+      root.value.style.cssText += ';color:red;font-size:40px;'
+    })
+    onBeforeUpdate(() => {
+      console.log('onBeforeUpdate')
+    })
+    onUpdated(() => {
+      console.log('onUpdated')
+    })
+    onBeforeUnmount(() => {
+      console.log('onBeforeUnmount')
+    })
+    onUnmounted(() => {
+      console.log('onUnmounted')
+    })
+    onErrorCaptured(() => {
+      console.log('onErrorCaptured')
+    })
     return {
       change,
       ...toRefs(original), // 把reactive中的每一项变为ref响应式数据
-      ratio
+      ratio,
+      root
     }
   }
 }
